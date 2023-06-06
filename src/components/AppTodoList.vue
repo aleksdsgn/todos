@@ -5,6 +5,7 @@
       :key="todo.id"
       :todo="todo"
       @toggle-todo="toggleTodo"
+      @remove-todo="removeTodo"
     />
   </ul>
 </template>
@@ -38,6 +39,10 @@ export default defineComponent({
       if (targetTodo) {
         targetTodo.completed = !targetTodo.completed
       }
+    },
+    removeTodo(id: number) {
+      // отфильтрованный массив из которого удаляем задачу id которой получили
+      this.todos = this.todos.filter((todo: Todo) => todo.id !== id)
     }
   }
 })
