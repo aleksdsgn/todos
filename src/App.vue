@@ -50,7 +50,7 @@ export default defineComponent({
   },
   methods: {
     addTodo(todo: Todo) {
-      console.log(todo)
+      this.todos.push(todo)
     },
     toggleTodo(id: number) {
       const targetTodo = this.todos.find((todo: Todo) => todo.id === id)
