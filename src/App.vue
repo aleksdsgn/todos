@@ -1,12 +1,15 @@
 <template>
   <AppHeader />
 
-  <AppFilters />
+  <AppFilters
+    :activeFilter="activeFilter"
+    @set-filter="setFilter"
+  />
 
   <main class="app-main">
     
     <AppTodoList
-      :todos="todos"
+      :todos="filteredTodos"
       @toggle-todo="toggleTodo"
       @remove-todo="removeTodo"
     />
@@ -26,9 +29,11 @@ import AppTodoList from './components/AppTodoList.vue';
 import AppAddTodo from './components/AppAddTodo.vue';
 import AppFooter from './components/AppFooter.vue';
 import { Todo } from './types/Todo';
+import { Filter } from '@/types/Filter';
 
 interface State {
-  todos: Todo[]
+  todos: Todo[],
+  activeFilter: Filter
 }
 
 export default defineComponent({
@@ -45,7 +50,21 @@ export default defineComponent({
         { id: 0, text: 'Выучить основы Vue', completed: true },
         { id: 1, text: 'Выучить основы Typescript', completed: false },
         { id: 2, text: 'Выложить этот проект', completed: false },
-      ]
+      ],
+      activeFilter: 'All'
+    }
+  },
+  computed: {
+    filteredTodos(): Todo[] {
+      switch (this.activeFilter) {
+        case 'Active':
+          return this.todos.filter(todo => !todo.completed)
+        case 'Done':
+          return this.todos.filter(todo => todo.completed)
+        case 'All':
+        default:
+          return this.todos
+      }
     }
   },
   methods: {
@@ -63,6 +82,9 @@ export default defineComponent({
       // отфильтрованный массив из которого удаляем задачу id которой получили
       this.todos = this.todos.filter((todo: Todo) => todo.id !== id)
     },
+    setFilter(filter: Filter) {
+      this.activeFilter = filter
+    }
   }
 })
 </script>
